@@ -1,21 +1,25 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { useStore } from '../../store/useStore';
+import { useAuth } from '../../hooks/useAuth';
 import {
   Search, Bell, Moon, Sun, ChevronDown, Wallet,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const PAGE_TITLES = {
-  home:      { title: 'لوحة التحكم',   subtitle: 'مرحباً بعودتك' },
-  trading:   { title: 'التداول',        subtitle: 'شراء وبيع الأسهم في الوقت الفعلي' },
-  portfolio: { title: 'محفظتي',        subtitle: 'تتبع أداء استثماراتك' },
-  news:      { title: 'أخبار الشركة',  subtitle: 'آخر المستجدات والإعلانات' },
-  settings:  { title: 'الإعدادات',     subtitle: 'تخصيص حسابك وتفضيلاتك' },
+  '/': { title: 'لوحة التحكم', subtitle: 'مرحباً بعودتك' },
+  '/trading': { title: 'التداول', subtitle: 'شراء وبيع الأسهم في الوقت الفعلي' },
+  '/portfolio': { title: 'محفظتي', subtitle: 'تتبع أداء استثماراتك' },
+  '/news': { title: 'أخبار الشركة', subtitle: 'آخر المستجدات والإعلانات' },
+  '/settings': { title: 'الإعدادات', subtitle: 'تخصيص حسابك وتفضيلاتك' },
 };
 
 const Navbar = () => {
-  const { darkMode, toggleDarkMode, user, activePage } = useStore();
-  const page = PAGE_TITLES[activePage] || PAGE_TITLES.home;
+  const { darkMode, toggleDarkMode } = useStore();
+  const { user } = useAuth();
+  const location = useLocation();
+  const page = PAGE_TITLES[location.pathname] || PAGE_TITLES['/'];
 
   return (
     <header className="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
@@ -24,7 +28,7 @@ const Navbar = () => {
         {/* Left: Page Title (desktop) */}
         <div className="hidden md:block">
           <motion.div
-            key={activePage}
+            key={location.pathname}
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25 }}
@@ -34,22 +38,57 @@ const Navbar = () => {
           </motion.div>
         </div>
 
-        {/* Mobile Logo */}
-        <div className="md:hidden font-bold text-base dark:text-white">تجار المال</div>
+        {/* Mobile Logo (only on tiny screens where ticker might be hidden) */}
+        <div className="xs:hidden font-bold text-base dark:text-white">تجار المال</div>
 
-        {/* Right: Search + Actions */}
-        <div className="flex items-center gap-2 md:gap-4 flex-1 md:flex-none justify-end">
+        {/* Center: Trading Ticker (Advertisement) */}
+        <div className="flex flex-1 max-w-xl mx-2 md:mx-4 lg:mx-8 overflow-hidden bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-100 dark:border-slate-800 py-1.5 md:py-2 px-3 md:px-4 relative group">
+          <motion.div
+            className="flex items-center gap-8 whitespace-nowrap"
+            animate={{ x: ["-50%", "0%"] }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          >
+            {[1, 2].map((loop) => (
+              <div key={loop} className="flex items-center gap-8 shrink-0 pr-8">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-slate-400">ARAMCO</span>
+                  <span className="text-sm font-bold dark:text-white">32.45</span>
+                  <span className="text-[10px] font-bold text-emerald-500">▲ +0.12%</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-slate-400">SABIC</span>
+                  <span className="text-sm font-bold dark:text-white">91.20</span>
+                  <span className="text-[10px] font-bold text-rose-500">▼ -0.45%</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-slate-400">STC</span>
+                  <span className="text-sm font-bold dark:text-white">42.10</span>
+                  <span className="text-[10px] font-bold text-emerald-500">▲ +0.05%</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-slate-400">MAADEN</span>
+                  <span className="text-sm font-bold dark:text-white">54.30</span>
+                  <span className="text-[10px] font-bold text-emerald-500">▲ +1.20%</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-slate-400">SAR/USD</span>
+                  <span className="text-sm font-bold dark:text-white">3.75</span>
+                  <span className="text-[10px] font-bold text-slate-400">0.00%</span>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+          {/* Fades */}
+          <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-slate-50 dark:from-slate-800/40 to-transparent pointer-events-none" />
+          <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-slate-50 dark:from-slate-800/40 to-transparent pointer-events-none" />
+        </div>
 
-          {/* Search Bar */}
-          <div className="hidden sm:flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-xl w-56 lg:w-80 group focus-within:ring-2 ring-primary-500/20 transition-all">
-            <Search className="w-4 h-4 text-slate-400 flex-shrink-0" />
-            <input
-              type="text"
-              placeholder="بحث في الأسهم والأخبار..."
-              className="bg-transparent border-none outline-none text-sm w-full dark:text-white dark:placeholder:text-slate-500"
-            />
-          </div>
-
+        {/* Right: Actions */}
+        <div className="flex items-center gap-2 md:gap-4 flex-none justify-end">
           {/* Wallet Badge */}
           <div className="hidden lg:flex items-center gap-2.5 px-3 py-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-100 dark:border-emerald-800/40">
             <div className="w-7 h-7 rounded-lg bg-emerald-500/15 flex items-center justify-center">
@@ -58,7 +97,7 @@ const Navbar = () => {
             <div>
               <p className="text-[9px] text-emerald-500 font-semibold uppercase tracking-wide">الرصيد</p>
               <p className="text-sm font-bold text-emerald-700 dark:text-emerald-300 tabular-nums leading-tight">
-                {user?.balance?.toLocaleString('ar-SA')} {user?.currency}
+                {(user?.balance || 0).toLocaleString('ar-SA')} {user?.currency || 'ر.س'}
               </p>
             </div>
           </div>
@@ -88,14 +127,12 @@ const Navbar = () => {
 
           {/* User */}
           <button className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
-            <img
-              src={user?.avatar}
-              className="w-8 h-8 rounded-full object-cover border-2 border-white dark:border-slate-700 shadow-sm"
-              alt="Profile"
-            />
+            <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center text-primary-600 text-xs font-bold border-2 border-white dark:border-slate-700 shadow-sm">
+              {user?.fullName?.charAt(0) || user?.userName?.charAt(0) || 'U'}
+            </div>
             <div className="hidden lg:block text-right">
-              <p className="text-xs font-bold dark:text-white leading-tight">{user?.name}</p>
-              <p className="text-[10px] text-slate-400 leading-tight">{user?.role}</p>
+              <p className="text-xs font-bold dark:text-white leading-tight">{user?.fullName || user?.userName}</p>
+              <p className="text-[10px] text-slate-400 leading-tight">{user?.roles?.[0] || 'مستثمر'}</p>
             </div>
             <ChevronDown className="hidden sm:block w-3.5 h-3.5 text-slate-400" />
           </button>
@@ -104,5 +141,6 @@ const Navbar = () => {
     </header>
   );
 };
+
 
 export default Navbar;

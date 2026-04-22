@@ -1,33 +1,51 @@
 import React, { useState } from 'react';
-import { useStore } from '../store/useStore';
+import { useAuth } from '../hooks/useAuth';
 import { motion, AnimatePresence } from 'framer-motion';
-import { TrendingUp, Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { TrendingUp, Mail, Lock, User, ArrowRight, ShieldCheck, Phone, Loader2 } from 'lucide-react';
 
 const Auth = () => {
-  const { login } = useStore();
+  const { login, register, isLoading } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [error, setError] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSubmit = (e) => {
+  // Form states
+  const [formData, setFormData] = useState({
+    email: '',
+    userName: '',
+    password: '',
+    fullName: '',
+    nationalId: '',
+    phoneNumber: '',
+    emailOrUsername: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
 
-    if (!email || !password || (!isLogin && !name)) {
-      setError('يرجى تعبئة جميع الحقول المطلوبة');
-      return;
+    if (isLogin) {
+      const credentials = {
+        emailOrUsername: formData.emailOrUsername,
+        password: formData.password
+      };
+      await login(credentials, rememberMe);
+    } else {
+      const userData = {
+        email: formData.email,
+        userName: formData.userName,
+        password: formData.password,
+        fullName: formData.fullName,
+        nationalId: formData.nationalId,
+        phoneNumber: formData.phoneNumber
+      };
+      const success = await register(userData);
+      if (success) {
+        setIsLogin(true);
+      }
     }
-
-    // Mock Authentication
-    login({
-      name: isLogin ? 'أحمد القحطاني' : name,
-      email: email,
-      avatar: 'https://i.pravatar.cc/150?u=demo',
-      balance: 150000,
-      currency: 'ر.س'
-    });
   };
 
   return (
@@ -64,7 +82,7 @@ const Auth = () => {
       </div>
 
       {/* Form Side */}
-      <div className="flex-1 flex flex-col justify-center px-8 sm:px-16 lg:px-24">
+      <div className="flex-1 flex flex-col justify-center px-8 sm:px-16 lg:px-24 py-12">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -79,53 +97,120 @@ const Auth = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <AnimatePresence mode='wait'>
-              {error && (
-                <motion.div 
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="bg-rose-50 text-rose-600 p-3 rounded-xl text-sm border border-rose-100"
-                >
-                  {error}
-                </motion.div>
-              )}
-            </AnimatePresence>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {!isLogin ? (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium dark:text-slate-300">الاسم بالكامل</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <User className="w-5 h-5 text-slate-400" />
+                      </div>
+                      <input 
+                        type="text" 
+                        name="fullName"
+                        value={formData.fullName}
+                        onChange={handleChange}
+                        required
+                        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pr-10 pl-4 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 dark:text-white transition-all"
+                        placeholder="عبدالله محمد"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium dark:text-slate-300">اسم المستخدم</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <User className="w-5 h-5 text-slate-400" />
+                      </div>
+                      <input 
+                        type="text" 
+                        name="userName"
+                        value={formData.userName}
+                        onChange={handleChange}
+                        required
+                        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pr-10 pl-4 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 dark:text-white transition-all"
+                        placeholder="user123"
+                      />
+                    </div>
+                  </div>
+                </div>
 
-            {!isLogin && (
+                <div className="space-y-1">
+                  <label className="text-sm font-medium dark:text-slate-300">البريد الإلكتروني</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                      <Mail className="w-5 h-5 text-slate-400" />
+                    </div>
+                    <input 
+                      type="email" 
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pr-10 pl-4 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 dark:text-white transition-all"
+                      placeholder="name@example.com"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium dark:text-slate-300">رقم الهوية</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <ShieldCheck className="w-5 h-5 text-slate-400" />
+                      </div>
+                      <input 
+                        type="text" 
+                        name="nationalId"
+                        value={formData.nationalId}
+                        onChange={handleChange}
+                        required
+                        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pr-10 pl-4 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 dark:text-white transition-all"
+                        placeholder="1234567890"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium dark:text-slate-300">رقم الجوال</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <Phone className="w-5 h-5 text-slate-400" />
+                      </div>
+                      <input 
+                        type="text" 
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
+                        onChange={handleChange}
+                        required
+                        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pr-10 pl-4 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 dark:text-white transition-all"
+                        placeholder="05xxxxxxx"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
               <div className="space-y-1">
-                <label className="text-sm font-medium dark:text-slate-300">الاسم الكامل</label>
+                <label className="text-sm font-medium dark:text-slate-300">البريد الإلكتروني أو اسم المستخدم</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                    <User className="w-5 h-5 text-slate-400" />
+                    <Mail className="w-5 h-5 text-slate-400" />
                   </div>
                   <input 
                     type="text" 
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    name="emailOrUsername"
+                    value={formData.emailOrUsername}
+                    onChange={handleChange}
+                    required
                     className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pr-10 pl-4 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 dark:text-white transition-all"
-                    placeholder="عبدالله محمد"
+                    placeholder="name@example.com"
                   />
                 </div>
               </div>
             )}
-
-            <div className="space-y-1">
-              <label className="text-sm font-medium dark:text-slate-300">البريد الإلكتروني</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <Mail className="w-5 h-5 text-slate-400" />
-                </div>
-                <input 
-                  type="email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pr-10 pl-4 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 dark:text-white transition-all"
-                  placeholder="name@example.com"
-                />
-              </div>
-            </div>
 
             <div className="space-y-1">
               <div className="flex items-center justify-between">
@@ -142,17 +227,42 @@ const Auth = () => {
                 </div>
                 <input 
                   type="password" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
                   className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pr-10 pl-4 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 dark:text-white transition-all"
                   placeholder="••••••••"
                 />
               </div>
             </div>
 
-            <button type="submit" className="w-full btn-primary py-4 mt-8 flex items-center justify-center gap-2 group">
-              {isLogin ? 'تسجيل الدخول' : 'إنشاء حساب'}
-              <ArrowRight className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            {isLogin && (
+              <div className="flex items-center gap-2 py-2">
+                <input 
+                  type="checkbox" 
+                  id="remember" 
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+                />
+                <label htmlFor="remember" className="text-sm text-slate-600 dark:text-slate-400 cursor-pointer">تذكرني</label>
+              </div>
+            )}
+
+            <button 
+              type="submit" 
+              disabled={isLoading}
+              className="w-full btn-primary py-4 mt-4 flex items-center justify-center gap-2 group disabled:opacity-70"
+            >
+              {isLoading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <>
+                  {isLogin ? 'تسجيل الدخول' : 'إنشاء حساب'}
+                  <ArrowRight className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                </>
+              )}
             </button>
           </form>
 
@@ -172,3 +282,4 @@ const Auth = () => {
 };
 
 export default Auth;
+

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, Mail, Lock, Eye, EyeOff, Loader2, ShieldCheck } from 'lucide-react';
 import { useAdminStore } from '../../store/useAdminStore';
-import { authService } from '../../services/api';
+import authService from '../../services/authService';
 import toast from 'react-hot-toast';
 
 export default function AdminLogin() {

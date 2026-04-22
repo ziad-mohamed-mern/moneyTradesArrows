@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Plus, Pencil, Trash2, Loader2, Newspaper, AlertTriangle, FileText } from 'lucide-react';
-import { newsService } from '../../services/api';
+import newsService from '../../services/newsService';
 import DataTable from '../components/DataTable';
 import Modal from '../components/Modal';
 import toast from 'react-hot-toast';

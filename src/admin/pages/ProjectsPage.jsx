@@ -5,7 +5,8 @@ import {
   Plus, Pencil, Trash2, Image as ImageIcon, Loader2,
   FolderKanban, X, Upload, AlertTriangle,
 } from 'lucide-react';
-import { projectsService, BASE_URL } from '../../services/api';
+import projectsService from '../../services/projectsService';
+import { BASE_URL } from '../../services/api';
 import DataTable from '../components/DataTable';
 import Modal from '../components/Modal';
 import toast from 'react-hot-toast';

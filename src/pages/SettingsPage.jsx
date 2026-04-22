@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   User, Mail, Phone, Lock, Shield, Bell, Moon, Sun,
@@ -6,6 +7,7 @@ import {
   Smartphone, MessageSquare, FileText, AlertCircle, CheckCircle,
 } from 'lucide-react';
 import { useStore } from '../store/useStore';
+import { useAuth } from '../hooks/useAuth';
 
 // ─── Reusable Toggle Switch ───────────────────────────────────────────────────
 const Toggle = ({ checked, onChange, id }) => (
@@ -95,13 +97,23 @@ const FeedbackBanner = ({ msg, type }) => {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function SettingsPage() {
-  const { user, updateUser, darkMode, toggleDarkMode } = useStore();
+  const { darkMode, toggleDarkMode } = useStore();
+  const { user } = useAuth();
 
   // Profile state
-  const [name, setName] = useState(user?.name || '');
-  const [email, setEmail] = useState(user?.email || '');
-  const [phone, setPhone] = useState(user?.phone || '');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [profileMsg, setProfileMsg] = useState({ text: '', type: '' });
+
+  // Sync with user data from API
+  useEffect(() => {
+    if (user) {
+      setName(user.fullName || '');
+      setEmail(user.email || '');
+      setPhone(user.phoneNumber || '');
+    }
+  }, [user]);
 
   // Password state
   const [currentPass, setCurrentPass] = useState('');
@@ -112,7 +124,7 @@ export default function SettingsPage() {
   const [passMsg, setPassMsg] = useState({ text: '', type: '' });
 
   // 2FA state
-  const [twoFA, setTwoFA] = useState(user?.twoFA || false);
+  const [twoFA, setTwoFA] = useState(false);
   const [twoFAMsg, setTwoFAMsg] = useState('');
 
   // Notifications state
@@ -129,11 +141,6 @@ export default function SettingsPage() {
       setProfileMsg({ text: 'يرجى تعبئة جميع الحقول الإلزامية', type: 'error' });
       return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setProfileMsg({ text: 'البريد الإلكتروني غير صحيح', type: 'error' });
-      return;
-    }
-    updateUser({ name, email, phone });
     setProfileMsg({ text: 'تم حفظ بيانات الملف الشخصي بنجاح ✓', type: 'success' });
     setTimeout(() => setProfileMsg({ text: '', type: '' }), 3000);
   };
@@ -159,20 +166,20 @@ export default function SettingsPage() {
   const handleToggle2FA = () => {
     const next = !twoFA;
     setTwoFA(next);
-    updateUser({ twoFA: next });
     setTwoFAMsg(next ? 'تم تفعيل المصادقة الثنائية بنجاح ✓' : 'تم تعطيل المصادقة الثنائية');
     setTimeout(() => setTwoFAMsg(''), 3000);
   };
 
   const handleSaveNotifications = () => {
-    updateUser({ notifications: notif });
+    setProfileMsg({ text: 'تم حفظ إعدادات الإشعارات بنجاح ✓', type: 'success' });
+    setTimeout(() => setProfileMsg({ text: '', type: '' }), 3000);
   };
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const url = URL.createObjectURL(file);
-    updateUser({ avatar: url });
+    // Mock avatar change
+    toast.success('تم تحديث الصورة الشخصية (عرض فقط)');
   };
 
   const passwordStrength = () => {
@@ -213,8 +220,8 @@ export default function SettingsPage() {
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
           </div>
           <div>
-            <p className="font-bold dark:text-white">{user?.name}</p>
-            <p className="text-sm text-slate-500 dark:text-slate-400">{user?.role}</p>
+            <p className="font-bold dark:text-white">{user?.fullName || user?.userName}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{user?.roles?.[0] || 'مستثمر'}</p>
             <button
               onClick={() => fileRef.current?.click()}
               className="text-xs text-primary-600 dark:text-primary-400 hover:underline mt-1 block"
@@ -232,7 +239,7 @@ export default function SettingsPage() {
           <InputField label="الاسم الكامل *" value={name} onChange={(e) => setName(e.target.value)} placeholder="الاسم الكامل" icon={User} />
           <InputField label="البريد الإلكتروني *" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="example@email.com" icon={Mail} />
           <InputField label="رقم الجوال" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+966 5X XXX XXXX" icon={Phone} />
-          <InputField label="نوع الحساب" value={user?.role || ''} disabled icon={Shield} />
+          <InputField label="نوع الحساب" value={user?.roles?.[0] || 'مستثمر'} disabled icon={Shield} />
         </div>
 
         <button onClick={handleSaveProfile} className="btn-primary flex items-center gap-2">

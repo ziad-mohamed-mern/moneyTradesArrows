@@ -2,7 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { FolderKanban, Newspaper, Users, TrendingUp, AlertTriangle } from 'lucide-react';
-import { projectsService, newsService } from '../../services/api';
+import projectsService from '../../services/projectsService';
+import newsService from '../../services/newsService';
 
 export default function AdminDashboard() {
   const { data: projectsData, isLoading: loadingProjects, error: errProjects } = useQuery({

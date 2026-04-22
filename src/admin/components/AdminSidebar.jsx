@@ -5,7 +5,7 @@ import {
   LogOut, TrendingUp, Menu, X, ChevronRight,
 } from 'lucide-react';
 import { useAdminStore } from '../../store/useAdminStore';
-import { authService } from '../../services/api';
+import authService from '../../services/authService';
 import toast from 'react-hot-toast';
 
 const NAV = [
