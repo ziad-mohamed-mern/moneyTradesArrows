@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://arrows.runasp.net',
+        target: 'https://arrows.runasp.net',
         changeOrigin: true,
         secure: false,
       }
