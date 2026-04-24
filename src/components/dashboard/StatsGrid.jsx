@@ -9,37 +9,37 @@ function cn(...inputs) {
 }
 
 const stats = [
-  { 
-    label: 'عدد الأسهم', 
-    value: '24,500', 
-    trend: '+12%', 
-    isPositive: true, 
-    icon: Layers, 
-    color: 'blue' 
+  {
+    label: 'عدد الأسهم',
+    value: '24,500',
+    trend: '+12%',
+    isPositive: true,
+    icon: Layers,
+    color: 'blue'
   },
-  { 
-    label: 'الأسهم المباعة', 
-    value: '8,200', 
-    trend: '-3%', 
-    isPositive: false, 
-    icon: ShoppingBag, 
-    color: 'rose' 
+  {
+    label: 'الأسهم المباعة',
+    value: '8,200',
+    trend: '-3%',
+    isPositive: false,
+    icon: ShoppingBag,
+    color: 'rose'
   },
-  { 
-    label: 'الأسهم المتاحة', 
-    value: '16,300', 
-    trend: '+5%', 
-    isPositive: true, 
-    icon: CheckCircle, 
-    color: 'emerald' 
+  {
+    label: 'الأسهم المتاحة',
+    value: '16,300',
+    trend: '+5%',
+    isPositive: true,
+    icon: CheckCircle,
+    color: 'emerald'
   },
-  { 
-    label: 'الأرباح المحققة', 
-    value: '12,430 ر.س', 
-    trend: '+18%', 
-    isPositive: true, 
-    icon: TrendingUp, 
-    color: 'amber' 
+  {
+    label: 'الأرباح المحققة',
+    value: '12,430 ر.س',
+    trend: '+18%',
+    isPositive: true,
+    icon: TrendingUp,
+    color: 'amber'
   },
 ];
 
@@ -60,14 +60,14 @@ const item = {
 
 const StatsGrid = () => {
   return (
-    <motion.div 
+    <motion.div
       variants={container}
       initial="hidden"
       animate="show"
       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
     >
       {stats.map((stat, idx) => (
-        <motion.div 
+        <motion.div
           key={idx}
           variants={item}
           className="premium-card group"

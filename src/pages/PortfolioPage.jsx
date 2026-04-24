@@ -15,18 +15,18 @@ const portfolioGrowth = [
   { month: 'أكتوبر', value: 82000 },
   { month: 'نوفمبر', value: 88500 },
   { month: 'ديسمبر', value: 84200 },
-  { month: 'يناير',  value: 95800 },
+  { month: 'يناير', value: 95800 },
   { month: 'فبراير', value: 102300 },
-  { month: 'مارس',   value: 110000 },
-  { month: 'أبريل',  value: 118740 },
+  { month: 'مارس', value: 110000 },
+  { month: 'أبريل', value: 118740 },
 ];
 
 const holdings = [
-  { symbol: 'SHMK',   name: 'الشمكة المالية',     qty: 500,  avgPrice: 20.5,  currentPrice: 24.75, color: '#3b82f6' },
-  { symbol: 'ARAMCO', name: 'أرامكو السعودية',     qty: 120,  avgPrice: 26.0,  currentPrice: 28.80, color: '#f59e0b' },
-  { symbol: 'STC',    name: 'الاتصالات السعودية',  qty: 200,  avgPrice: 42.0,  currentPrice: 45.20, color: '#8b5cf6' },
-  { symbol: 'SABIC',  name: 'سابك',                qty: 80,   avgPrice: 95.0,  currentPrice: 88.50, color: '#ef4444' },
-  { symbol: 'RIYAD',  name: 'بنك الرياض',          qty: 300,  avgPrice: 18.0,  currentPrice: 20.10, color: '#10b981' },
+  { symbol: 'SHMK', name: 'الشمكة المالية', qty: 500, avgPrice: 20.5, currentPrice: 24.75, color: '#3b82f6' },
+  { symbol: 'ARAMCO', name: 'أرامكو السعودية', qty: 120, avgPrice: 26.0, currentPrice: 28.80, color: '#f59e0b' },
+  { symbol: 'STC', name: 'الاتصالات السعودية', qty: 200, avgPrice: 42.0, currentPrice: 45.20, color: '#8b5cf6' },
+  { symbol: 'SABIC', name: 'سابك', qty: 80, avgPrice: 95.0, currentPrice: 88.50, color: '#ef4444' },
+  { symbol: 'RIYAD', name: 'بنك الرياض', qty: 300, avgPrice: 18.0, currentPrice: 20.10, color: '#10b981' },
 ];
 
 const RADIAN = Math.PI / 180;
@@ -56,18 +56,18 @@ const CustomTooltip = ({ active, payload }) => {
 export default function PortfolioPage() {
   const enriched = useMemo(() =>
     holdings.map((h) => {
-      const totalCost   = h.qty * h.avgPrice;
-      const currentVal  = h.qty * h.currentPrice;
-      const profit      = currentVal - totalCost;
-      const profitPct   = (profit / totalCost) * 100;
+      const totalCost = h.qty * h.avgPrice;
+      const currentVal = h.qty * h.currentPrice;
+      const profit = currentVal - totalCost;
+      const profitPct = (profit / totalCost) * 100;
       return { ...h, totalCost, currentVal, profit, profitPct };
     }), []);
 
   const totalInvested = enriched.reduce((s, h) => s + h.totalCost, 0);
-  const totalValue    = enriched.reduce((s, h) => s + h.currentVal, 0);
-  const totalProfit   = totalValue - totalInvested;
+  const totalValue = enriched.reduce((s, h) => s + h.currentVal, 0);
+  const totalProfit = totalValue - totalInvested;
   const totalProfitPct = (totalProfit / totalInvested) * 100;
-  const totalShares    = enriched.reduce((s, h) => s + h.qty, 0);
+  const totalShares = enriched.reduce((s, h) => s + h.qty, 0);
 
   const pieData = enriched.map((h) => ({
     name: h.symbol,
@@ -159,11 +159,11 @@ export default function PortfolioPage() {
         >
           <h4 className="font-semibold dark:text-white mb-5">نمو المحفظة</h4>
           <div className="w-full h-[240px] min-w-0">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <AreaChart data={portfolioGrowth}>
                 <defs>
                   <linearGradient id="portfolioGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%"  stopColor="#8b5cf6" stopOpacity={0.3} />
+                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
                     <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
                   </linearGradient>
                 </defs>
@@ -192,7 +192,7 @@ export default function PortfolioPage() {
         >
           <h4 className="font-semibold dark:text-white mb-4">توزيع الأصول</h4>
           <div className="w-full h-[200px] min-w-0">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <PieChart>
                 <Pie
                   data={pieData}

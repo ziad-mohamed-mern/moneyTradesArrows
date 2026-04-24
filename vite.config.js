@@ -10,6 +10,8 @@ export default defineConfig({
         target: 'https://arrows.runasp.net',
         changeOrigin: true,
         secure: false,
+        proxyTimeout: 15000,
+        timeout: 15000,
       }
     }
   }

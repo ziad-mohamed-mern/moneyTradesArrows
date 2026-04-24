@@ -1,18 +1,19 @@
 import React from 'react';
-import { Briefcase, ArrowRight, Activity, PieChart } from 'lucide-react';
+import { Wallet, ChevronLeft, Activity, PieChart } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const PortfolioStats = () => {
   return (
     <div className="premium-card">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-bold dark:text-white flex items-center gap-2">
-          <Briefcase className="w-5 h-5 text-primary-500" />
+          <Wallet className="w-5 h-5 text-primary-500" />
           محفظتي
         </h3>
-        <button className="text-sm font-medium text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1">
+        <button className="text-sm font-medium text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1 group">
           التفاصيل
-          <ArrowRight className="w-4 h-4" />
+          <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
         </button>
       </div>
 
@@ -40,7 +41,7 @@ const PortfolioStats = () => {
               <p className="font-bold dark:text-white font-mono">98.50</p>
             </div>
           </div>
-          
+
           <div className="p-4 rounded-xl border border-slate-100 dark:border-slate-800 flex items-start gap-3">
             <div className="w-10 h-10 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-500 flex items-center justify-center shrink-0">
               <Activity className="w-5 h-5" />
@@ -52,9 +53,11 @@ const PortfolioStats = () => {
           </div>
         </div>
 
-        <button className="w-full btn-primary py-3 rounded-xl flex items-center justify-center gap-2">
-          شراء المزيد
-        </button>
+        <Link to="/trading">
+          <button className="w-full btn-primary py-3 rounded-xl flex items-center justify-center gap-2">
+            شراء المزيد
+          </button>
+        </Link>
       </div>
     </div>
   );

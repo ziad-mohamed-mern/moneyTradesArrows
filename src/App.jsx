@@ -11,8 +11,9 @@ import Auth from './pages/Auth';
 const Dashboard    = lazy(() => import('./pages/Dashboard'));
 const TradingPage  = lazy(() => import('./pages/TradingPage'));
 const PortfolioPage = lazy(() => import('./pages/PortfolioPage'));
-const NewsPage     = lazy(() => import('./pages/NewsPage'));
-const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+const NewsPage       = lazy(() => import('./pages/NewsPage'));
+const NewsDetailPage = lazy(() => import('./pages/NewsDetailPage'));
+const SettingsPage   = lazy(() => import('./pages/SettingsPage'));
 
 // ── Page Loader ───────────────────────────────────────────────────────────────
 const PageLoader = () => (
@@ -61,6 +62,7 @@ function App() {
                       <Route path="/trading" element={<TradingPage />} />
                       <Route path="/portfolio" element={<PortfolioPage />} />
                       <Route path="/news" element={<NewsPage />} />
+                      <Route path="/news/:id" element={<NewsDetailPage />} />
                       <Route path="/settings" element={<SettingsPage />} />
                     </Routes>
                   </Suspense>

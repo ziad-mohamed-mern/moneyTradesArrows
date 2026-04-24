@@ -30,8 +30,8 @@ const generateData = (days, base, volatility) => {
 
 const TIMEFRAMES = [
   { label: '7 أيام', key: '1W', days: 7 },
-  { label: 'شهر',   key: '1M', days: 30 },
-  { label: 'سنة',   key: '1Y', days: 365 },
+  { label: 'شهر', key: '1M', days: 30 },
+  { label: 'سنة', key: '1Y', days: 365 },
 ];
 
 const stockData = {
@@ -191,11 +191,10 @@ export default function TradingPage() {
                 <button
                   key={tf.key}
                   onClick={() => setTimeframe(tf.key)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                    timeframe === tf.key
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${timeframe === tf.key
                       ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-sm'
                       : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
-                  }`}
+                    }`}
                 >
                   {tf.label}
                 </button>
@@ -204,7 +203,7 @@ export default function TradingPage() {
           </div>
 
           <div className="w-full h-[280px] min-w-0">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <AreaChart data={chartData} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
                 <defs>
                   <linearGradient id="priceGrad" x1="0" y1="0" x2="0" y2="1">
@@ -255,21 +254,19 @@ export default function TradingPage() {
           <div className="flex rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 mb-5">
             <button
               onClick={() => setTradeType('buy')}
-              className={`flex-1 py-3 font-semibold text-sm transition-all ${
-                tradeType === 'buy'
+              className={`flex-1 py-3 font-semibold text-sm transition-all ${tradeType === 'buy'
                   ? 'bg-emerald-500 text-white'
                   : 'bg-transparent text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'
-              }`}
+                }`}
             >
               شراء
             </button>
             <button
               onClick={() => setTradeType('sell')}
-              className={`flex-1 py-3 font-semibold text-sm transition-all ${
-                tradeType === 'sell'
+              className={`flex-1 py-3 font-semibold text-sm transition-all ${tradeType === 'sell'
                   ? 'bg-red-500 text-white'
                   : 'bg-transparent text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'
-              }`}
+                }`}
             >
               بيع
             </button>
@@ -292,11 +289,10 @@ export default function TradingPage() {
               value={qty}
               onChange={(e) => { setQty(e.target.value); setQtyError(''); }}
               placeholder="0"
-              className={`w-full border rounded-xl px-4 py-3 text-lg font-bold bg-slate-50 dark:bg-slate-800 dark:text-white outline-none focus:ring-2 transition-all tabular-nums ${
-                qtyError
+              className={`w-full border rounded-xl px-4 py-3 text-lg font-bold bg-slate-50 dark:bg-slate-800 dark:text-white outline-none focus:ring-2 transition-all tabular-nums ${qtyError
                   ? 'border-red-400 focus:ring-red-400/20'
                   : 'border-slate-200 dark:border-slate-700 focus:ring-primary-400/30 focus:border-primary-400'
-              }`}
+                }`}
             />
             {qtyError && (
               <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
@@ -339,11 +335,10 @@ export default function TradingPage() {
           {/* Execute Button */}
           <button
             onClick={handleExecute}
-            className={`w-full py-3.5 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg ${
-              tradeType === 'buy'
+            className={`w-full py-3.5 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg ${tradeType === 'buy'
                 ? 'bg-gradient-to-l from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 shadow-emerald-500/25'
                 : 'bg-gradient-to-l from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-red-500/25'
-            }`}
+              }`}
           >
             <Zap className="w-4 h-4" />
             تنفيذ {tradeType === 'buy' ? 'الشراء' : 'البيع'}
@@ -378,11 +373,10 @@ export default function TradingPage() {
                   className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors"
                 >
                   <td className="py-3 px-2">
-                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold ${
-                      o.type === 'شراء'
+                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold ${o.type === 'شراء'
                         ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
                         : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300'
-                    }`}>
+                      }`}>
                       {o.type === 'شراء' ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                       {o.type}
                     </span>
@@ -395,11 +389,10 @@ export default function TradingPage() {
                   </td>
                   <td className="py-3 px-2 text-slate-400">{o.date}</td>
                   <td className="py-3 px-2">
-                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium ${
-                      o.status === 'مكتمل'
+                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium ${o.status === 'مكتمل'
                         ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-300'
                         : 'bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-300'
-                    }`}>
+                      }`}>
                       {o.status === 'مكتمل' ? <CheckCircle className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
                       {o.status}
                     </span>
