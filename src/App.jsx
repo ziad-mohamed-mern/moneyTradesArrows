@@ -5,6 +5,7 @@ import { useAuth } from './hooks/useAuth';
 import ProtectedRoute from './auth/ProtectedRoute';
 import Sidebar from './components/layout/Sidebar';
 import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
 import Auth from './pages/Auth';
 
 // ── Lazy-loaded pages for code splitting ──────────────────────────────────────
@@ -66,6 +67,7 @@ function App() {
                       <Route path="/settings" element={<SettingsPage />} />
                     </Routes>
                   </Suspense>
+                  <Footer />
                 </main>
               </div>
             </div>
