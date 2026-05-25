@@ -72,13 +72,18 @@ const Auth = () => {
             className="w-44 xl:w-52 h-auto object-contain drop-shadow-glow-gold"
           />
 
-          <div className="max-w-md">
-            <h2 className="font-serif text-4xl xl:text-5xl font-bold text-gold-300 mb-6 leading-tight">
+          <div className="max-w-xl px-2">
+            <h2 className="font-serif text-3xl xl:text-4xl font-bold text-gold-300 mb-5 leading-tight">
               استثمر بذكاء، <br /> ونمِّ ثروتك بأمان.
             </h2>
-            <p className="text-gold-100/90 text-lg leading-relaxed">
-              المنصة الأسرع والأكثر أماناً لتداول الأسهم وإدارة المحافظ الاستثمارية في المملكة.
-            </p>
+            <div className="space-y-4 text-gold-100/85 text-[13px] lg:text-sm xl:text-[15px] leading-[1.9] text-justify">
+              <p>
+                تمكّن المنصة عملائها من تداول أسهم الشركة في بيئة موحدة تتسم بالأمان العالي والسرعة في إنجاز العمليات، حيث توفر رؤية متكاملة وقوائم سوقية تفاعلية للأسهم، بما يعزز ثقة المستثمرين ويضمن وضوح التعاملات.
+              </p>
+              <p>
+                كما تمنح المساهمين رؤية شاملة ودقيقة حول أرباح الشركات ومشاريعها وخططها المستقبلية، عبر منظومة رقمية متطورة تُمكّن المستثمر من الاطلاع على القيمة الحقيقية لاستثماراته واتخاذ قراراته بثقة واطمئنان، حسب الأنظمة بالمملكة العربية السعودية.
+              </p>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3 text-gold-200/80 text-sm">
