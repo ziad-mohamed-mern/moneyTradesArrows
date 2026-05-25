@@ -17,15 +17,6 @@ const HeroSection = () => {
 
       <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
         <div className="flex-1 text-center md:text-right">
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-white text-sm mb-6 border border-white/10"
-          >
-            <TrendingUp className="w-4 h-4 text-emerald-300" />
-            <span>نظام التداول الجديد متاح الآن</span>
-          </motion.div>
 
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
             مستقبلك المالي يبدأ <br /> مع تجار المال للاستثمار
@@ -39,12 +30,6 @@ const HeroSection = () => {
               <button className="px-8 py-4 bg-white text-primary-600 font-bold rounded-2xl hover:bg-slate-50 transition-all flex items-center gap-2 group shadow-xl">
                 ابدأ التداول الآن
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-[-4px] transition-transform" />
-              </button>
-            </Link>
-            <Link to="/news">
-              <button className="px-8 py-4 bg-white/10 backdrop-blur-md text-white font-bold rounded-2xl border border-white/20 hover:bg-white/20 transition-all flex items-center gap-2">
-                <Newspaper className="w-5 h-5" />
-                أحدث الأخبار
               </button>
             </Link>
           </div>
