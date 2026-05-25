@@ -20,7 +20,7 @@ const SettingsPage   = lazy(() => import('./pages/SettingsPage'));
 const PageLoader = () => (
   <div className="flex-1 flex items-center justify-center min-h-[60vh]">
     <div className="flex flex-col items-center gap-4">
-      <div className="w-10 h-10 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin" />
+      <div className="w-10 h-10 border-4 border-primary-200 border-t-gold-400 rounded-full animate-spin" />
       <p className="text-sm text-slate-400">جاري التحميل...</p>
     </div>
   </div>
@@ -52,7 +52,7 @@ function App() {
         path="/*"
         element={
           <ProtectedRoute>
-            <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300 flex">
+            <div className="min-h-screen bg-primary-50 dark:bg-primary-950 transition-colors duration-300 flex">
               <Sidebar />
               <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
                 <Navbar />

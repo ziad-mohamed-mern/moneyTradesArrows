@@ -22,7 +22,7 @@ const Navbar = () => {
   const page = PAGE_TITLES[location.pathname] || PAGE_TITLES['/'];
 
   return (
-    <header className="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
+    <header className="sticky top-0 z-40 bg-white/85 dark:bg-primary-950/85 backdrop-blur-md border-b border-primary-100 dark:border-primary-800 transition-colors duration-300">
       <div className="px-4 md:px-8 py-3 flex items-center justify-between gap-4">
 
         {/* Left: Page Title (desktop) */}
@@ -33,8 +33,8 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25 }}
           >
-            <h2 className="text-sm font-bold dark:text-white leading-tight">{page.title}</h2>
-            <p className="text-[11px] text-slate-400">{page.subtitle}</p>
+            <h2 className="text-sm font-bold text-primary-900 dark:text-gold-300 leading-tight font-serif">{page.title}</h2>
+            <p className="text-[11px] text-primary-500 dark:text-primary-400">{page.subtitle}</p>
           </motion.div>
         </div>
 

@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   BarChart2, Briefcase, Newspaper, Settings,
-  X, Menu, TrendingUp, Home, LogOut
+  X, Menu, Home, LogOut
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -59,12 +59,14 @@ const Sidebar = () => {
       >
         {/* Logo */}
         <div className="p-6 flex items-center gap-3 border-b border-slate-100 dark:border-slate-800">
-          <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/25">
-            <TrendingUp className="text-white w-5 h-5" />
-          </div>
+          <img
+            src="/logo.png"
+            alt="تجار المال"
+            className="w-11 h-11 rounded-xl object-cover shadow-md shadow-primary-500/20 flex-shrink-0"
+          />
           <div className="flex-1">
-            <h1 className="text-lg font-bold dark:text-white leading-tight">تجار المال</h1>
-            <p className="text-[11px] text-slate-400">للاستثمار المالي</p>
+            <h1 className="text-lg font-bold text-primary-800 dark:text-gold-300 leading-tight font-serif">تجار المال</h1>
+            <p className="text-[11px] text-primary-500 dark:text-primary-400">للاستثمار المالي</p>
           </div>
           <button
             onClick={() => setIsOpen(false)}

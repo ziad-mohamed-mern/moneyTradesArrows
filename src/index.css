@@ -18,11 +18,11 @@
   }
 
   body {
-    @apply antialiased bg-slate-50 text-slate-900 transition-colors duration-300;
+    @apply antialiased bg-primary-50 text-slate-900 transition-colors duration-300;
   }
 
   .dark body {
-    @apply bg-slate-950 text-slate-100;
+    @apply bg-primary-950 text-slate-100;
   }
 
   /* Better RTL number handling */
@@ -67,14 +67,14 @@
     @apply rounded-2xl p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800;
   }
 
-  /* Primary button */
+  /* Primary button — gold accent on brand green text */
   .btn-primary {
     @apply px-6 py-3 rounded-xl 
-           bg-gradient-to-l from-primary-600 to-primary-500 
-           text-white font-semibold text-sm
-           hover:from-primary-700 hover:to-primary-600 
+           bg-gradient-to-l from-gold-400 to-gold-300 
+           text-primary-900 font-semibold text-sm
+           hover:from-gold-500 hover:to-gold-400 
            transition-all active:scale-95 
-           shadow-lg shadow-primary-500/25;
+           shadow-lg shadow-glow-gold;
   }
 
   /* Secondary button */
@@ -112,20 +112,27 @@
   }
 }
 
-/* ── Background Mesh Gradient ───────────────────────────────────────────────── */
+/* ── Background Mesh Gradient (brand forest green + gold) ───────────────────── */
 .bg-mesh {
   background-image:
-    radial-gradient(at 0% 0%,   hsla(199, 89%, 48%, 0.07) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, hsla(180, 100%, 50%, 0.07) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, hsla(240, 100%, 70%, 0.05) 0px, transparent 50%),
-    radial-gradient(at 0% 100%, hsla(300, 100%, 50%, 0.05) 0px, transparent 50%);
+    radial-gradient(at 0% 0%,   hsla(140, 22%, 34%, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(48, 68%, 67%, 0.06) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, hsla(140, 30%, 28%, 0.06) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, hsla(48, 55%, 55%, 0.05) 0px, transparent 50%);
 }
 
 .dark .bg-mesh {
   background-image:
-    radial-gradient(at 0% 0%,   hsla(210, 100%, 15%, 0.4) 0px, transparent 55%),
-    radial-gradient(at 100% 0%, hsla(220, 100%, 8%, 0.3) 0px, transparent 50%),
-    radial-gradient(at 50% 50%, hsla(220, 80%, 5%, 0.2) 0px, transparent 60%);
+    radial-gradient(at 0% 0%,   hsla(140, 25%, 18%, 0.45) 0px, transparent 55%),
+    radial-gradient(at 100% 0%, hsla(48, 40%, 25%, 0.15) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, hsla(140, 20%, 10%, 0.25) 0px, transparent 60%);
+}
+
+/* Auth page decorative mesh on green panel */
+.bg-auth-mesh {
+  background-image:
+    radial-gradient(at 20% 20%, hsla(48, 68%, 67%, 0.12) 0px, transparent 45%),
+    radial-gradient(at 80% 80%, hsla(140, 30%, 22%, 0.2) 0px, transparent 50%);
 }
 
 /* ── Custom Scrollbar ────────────────────────────────────────────────────────── */
