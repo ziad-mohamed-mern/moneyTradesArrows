@@ -10,16 +10,19 @@ const PARTNERS = [
     name: 'هيئة السوق المالية',
     href: 'https://cma.org.sa',
     logo: '/partners/cma.png',
+    description: 'الجهة التنظيمية لسوق المال، وتشرف على التداول والإفصاح وحماية المستثمرين.',
   },
   {
-    name: 'وزارة الاستثمار',
-    href: 'https://misa.gov.sa',
+    name: 'وزارة التجارة و الاستثمار السعودي',
+    href: 'https://mc.gov.sa',
     logo: '/partners/misa.png',
+    description: 'تنظم التجارة والاستثمار وتعزز بيئة الأعمال وفق الأنظمة السعودية.',
   },
   {
     name: 'البنك المركزي السعودي',
     href: 'https://www.sama.gov.sa',
     logo: '/partners/sama.png',
+    description: 'يضبط السياسة النقدية ويشرف على الاستقرار المالي والقطاع المصرفي.',
   },
 ];
 
@@ -104,32 +107,30 @@ const Auth = () => {
             </div>
 
             <div className="mt-8 pt-6 border-t border-gold-400/25">
-              <p className="text-gold-300 text-sm font-semibold mb-4">شركاء المشروع</p>
-              <div className="flex flex-wrap items-stretch justify-center gap-3">
+              <p className="text-gold-300 text-sm font-semibold mb-4">الجهات الحكومية</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {PARTNERS.map((partner) => (
-                  <a
-                    key={partner.href}
-                    href={partner.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title={partner.name}
-                    className="flex items-center justify-center bg-white rounded-xl px-4 py-3 h-[4.5rem] min-w-[6.5rem] max-w-[8.5rem] flex-1 hover:ring-2 hover:ring-gold-400/50 hover:shadow-lg transition-all duration-200"
-                  >
-                    <img
-                      src={partner.logo}
-                      alt={partner.name}
-                      className="max-h-11 w-full object-contain"
-                    />
-                  </a>
+                  <div key={partner.href} className="flex flex-col items-center gap-2 text-center">
+                    <a
+                      href={partner.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={partner.name}
+                      className="flex w-full items-center justify-center bg-white rounded-xl px-3 py-3 h-[4.5rem] hover:ring-2 hover:ring-gold-400/50 hover:shadow-lg transition-all duration-200"
+                    >
+                      <img
+                        src={partner.logo}
+                        alt={partner.name}
+                        className="max-h-11 w-full object-contain"
+                      />
+                    </a>
+                    <p className="text-[11px] leading-relaxed text-gold-100/70 px-1">
+                      {partner.description}
+                    </p>
+                  </div>
                 ))}
               </div>
             </div>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-3 text-gold-200/80 text-sm">
-            <span>© 2024 تجار المال للاستثمار</span>
-            <span className="w-1 h-1 rounded-full bg-gold-400/60" />
-            <span>مرخص من هيئة السوق المالية</span>
           </div>
         </div>
       </div>
