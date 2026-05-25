@@ -1,25 +1,13 @@
-import React, { useMemo } from 'react';
-import { motion } from 'framer-motion';
-import {
-  AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
-  PieChart, Pie, Cell, Legend,
-} from 'recharts';
+import React, { useMemo, useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   TrendingUp, TrendingDown, Wallet, Package, BarChart2,
-  ArrowUpRight, ArrowDownRight,
+  ArrowRight, ArrowUpRight, ArrowDownRight, Zap, AlertCircle, CheckCircle,
 } from 'lucide-react';
+import { useStore } from '../store/useStore';
 
 // ─── Mock Data ────────────────────────────────────────────────────────────────
-
-const portfolioGrowth = [
-  { month: 'أكتوبر', value: 82000 },
-  { month: 'نوفمبر', value: 88500 },
-  { month: 'ديسمبر', value: 84200 },
-  { month: 'يناير', value: 95800 },
-  { month: 'فبراير', value: 102300 },
-  { month: 'مارس', value: 110000 },
-  { month: 'أبريل', value: 118740 },
-];
 
 const holdings = [
   { symbol: 'SHMK', name: 'الشمكة المالية', qty: 500, avgPrice: 20.5, currentPrice: 24.75, color: '#3b82f6' },
@@ -29,31 +17,15 @@ const holdings = [
   { symbol: 'RIYAD', name: 'بنك الرياض', qty: 300, avgPrice: 18.0, currentPrice: 20.10, color: '#10b981' },
 ];
 
-const RADIAN = Math.PI / 180;
-const renderLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-  return percent > 0.06 ? (
-    <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight="bold">
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  ) : null;
-};
-
-const CustomTooltip = ({ active, payload }) => {
-  if (!active || !payload?.length) return null;
-  return (
-    <div className="bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 shadow-2xl">
-      <p className="text-slate-300 text-xs mb-1">{payload[0].payload.month}</p>
-      <p className="text-emerald-400 font-bold">{payload[0].value.toLocaleString()} ر.س</p>
-    </div>
-  );
-};
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function PortfolioPage() {
+  const { addOrder, user } = useStore();
+  const [tradeType, setTradeType] = useState('buy');
+  const [selectedSymbol, setSelectedSymbol] = useState(holdings[0].symbol);
+  const [qty, setQty] = useState('');
+  const [qtyError, setQtyError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const enriched = useMemo(() =>
     holdings.map((h) => {
       const totalCost = h.qty * h.avgPrice;
@@ -69,11 +41,45 @@ export default function PortfolioPage() {
   const totalProfitPct = (totalProfit / totalInvested) * 100;
   const totalShares = enriched.reduce((s, h) => s + h.qty, 0);
 
-  const pieData = enriched.map((h) => ({
-    name: h.symbol,
-    value: +h.currentVal.toFixed(0),
-    color: h.color,
-  }));
+  const selectedHolding = enriched.find((h) => h.symbol === selectedSymbol) ?? enriched[0];
+
+  const total = useMemo(() => {
+    const n = parseInt(qty, 10);
+    return Number.isNaN(n) ? 0 : n * selectedHolding.currentPrice;
+  }, [qty, selectedHolding.currentPrice]);
+
+  const validate = () => {
+    const n = parseInt(qty, 10);
+    if (!qty || n <= 0) {
+      setQtyError('يرجى إدخال عدد أسهم صحيح');
+      return false;
+    }
+    if (n > 10000) {
+      setQtyError('الحد الأقصى للطلب الواحد 10,000 سهم');
+      return false;
+    }
+    if (tradeType === 'sell' && n > selectedHolding.qty) {
+      setQtyError(`الحد الأقصى للبيع ${selectedHolding.qty} سهم`);
+      return false;
+    }
+    setQtyError('');
+    return true;
+  };
+
+  const handleExecute = useCallback(() => {
+    if (!validate()) return;
+    addOrder({
+      type: tradeType === 'buy' ? 'شراء' : 'بيع',
+      stock: selectedHolding.symbol,
+      qty: parseInt(qty, 10),
+      price: selectedHolding.currentPrice,
+      total,
+      status: 'قيد التنفيذ',
+    });
+    setSuccessMsg(`تم تقديم طلب ${tradeType === 'buy' ? 'الشراء' : 'البيع'} بنجاح!`);
+    setQty('');
+    setTimeout(() => setSuccessMsg(''), 3500);
+  }, [qty, tradeType, total, addOrder, selectedHolding]);
 
   const summaryCards = [
     {
@@ -147,6 +153,185 @@ export default function PortfolioPage() {
           </motion.div>
         ))}
       </div>
+
+      {/* Buy / Sell */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="premium-card"
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <h3 className="text-lg font-bold dark:text-white">شراء وبيع الأسهم</h3>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
+              نفّذ صفقة سريعة من محفظتك
+            </p>
+          </div>
+          <Link
+            to="/trading"
+            className="inline-flex items-center justify-center gap-2 text-sm font-semibold text-primary-600 dark:text-gold-400 hover:underline group"
+          >
+            التداول المتقدم
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Holdings picker */}
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-slate-600 dark:text-slate-300">اختر السهم</label>
+            <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+              {enriched.map((h) => {
+                const isSelected = h.symbol === selectedSymbol;
+                const isUp = h.profit >= 0;
+                return (
+                  <button
+                    key={h.symbol}
+                    type="button"
+                    onClick={() => setSelectedSymbol(h.symbol)}
+                    className={`w-full flex items-center justify-between gap-3 p-3 rounded-xl border transition-all text-right ${
+                      isSelected
+                        ? 'border-primary-400 bg-primary-50 dark:bg-primary-900/30 ring-2 ring-primary-400/20'
+                        : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div
+                        className="w-9 h-9 rounded-lg flex-shrink-0 flex items-center justify-center text-white text-xs font-bold"
+                        style={{ backgroundColor: h.color }}
+                      >
+                        {h.symbol.slice(0, 2)}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-bold dark:text-white text-sm">{h.symbol}</p>
+                        <p className="text-xs text-slate-500 truncate">{h.name}</p>
+                      </div>
+                    </div>
+                    <div className="text-left flex-shrink-0">
+                      <p className="font-bold dark:text-white tabular-nums text-sm">{h.currentPrice} ر.س</p>
+                      <p className={`text-xs flex items-center justify-end gap-0.5 ${isUp ? 'text-emerald-500' : 'text-red-500'}`}>
+                        {isUp ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+                        {isUp ? '+' : ''}{h.profitPct.toFixed(1)}%
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Trade form */}
+          <div className="flex flex-col">
+            <div className="flex rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 mb-5">
+              <button
+                type="button"
+                onClick={() => setTradeType('buy')}
+                className={`flex-1 py-3 font-semibold text-sm transition-all flex items-center justify-center gap-1.5 ${
+                  tradeType === 'buy'
+                    ? 'bg-emerald-500 text-white'
+                    : 'bg-transparent text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'
+                }`}
+              >
+                <ArrowUpRight className="w-4 h-4" />
+                شراء
+              </button>
+              <button
+                type="button"
+                onClick={() => setTradeType('sell')}
+                className={`flex-1 py-3 font-semibold text-sm transition-all flex items-center justify-center gap-1.5 ${
+                  tradeType === 'sell'
+                    ? 'bg-red-500 text-white'
+                    : 'bg-transparent text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'
+                }`}
+              >
+                <ArrowDownRight className="w-4 h-4" />
+                بيع
+              </button>
+            </div>
+
+            <div className="flex justify-between items-center mb-4 text-sm">
+              <span className="text-slate-500">سعر السهم</span>
+              <span className="font-bold dark:text-white tabular-nums">
+                {selectedHolding.currentPrice} ر.س
+              </span>
+            </div>
+            {tradeType === 'sell' && (
+              <p className="text-xs text-slate-400 mb-3">
+                متاح للبيع: <span className="font-semibold text-slate-600 dark:text-slate-300">{selectedHolding.qty} سهم</span>
+              </p>
+            )}
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
+                عدد الأسهم
+              </label>
+              <input
+                type="number"
+                min="1"
+                value={qty}
+                onChange={(e) => { setQty(e.target.value); setQtyError(''); }}
+                placeholder="0"
+                className={`input-base text-lg font-bold tabular-nums ${
+                  qtyError ? 'border-red-400 focus:ring-red-400/20' : ''
+                }`}
+              />
+              {qtyError && (
+                <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                  <AlertCircle className="w-3 h-3" /> {qtyError}
+                </p>
+              )}
+            </div>
+
+            <div className="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-4 mb-4">
+              <div className="flex justify-between items-center">
+                <span className="text-slate-500 text-sm">الإجمالي المتوقع</span>
+                <span
+                  className={`font-bold text-xl tabular-nums ${
+                    tradeType === 'buy' ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500'
+                  }`}
+                >
+                  {total.toLocaleString('ar-SA', { minimumFractionDigits: 2 })} ر.س
+                </span>
+              </div>
+              <div className="flex justify-between items-center mt-2">
+                <span className="text-slate-400 text-xs">الرصيد المتاح</span>
+                <span className="text-slate-500 text-xs dark:text-slate-400 tabular-nums">
+                  {user?.balance?.toLocaleString()} {user?.currency}
+                </span>
+              </div>
+            </div>
+
+            <AnimatePresence>
+              {successMsg && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="mb-4 p-3 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700/50 rounded-xl flex items-center gap-2 text-emerald-700 dark:text-emerald-300 text-sm"
+                >
+                  <CheckCircle className="w-4 h-4 flex-shrink-0" />
+                  {successMsg}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <button
+              type="button"
+              onClick={handleExecute}
+              className={`w-full py-3.5 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg ${
+                tradeType === 'buy'
+                  ? 'bg-gradient-to-l from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 shadow-emerald-500/25'
+                  : 'bg-gradient-to-l from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-red-500/25'
+              }`}
+            >
+              <Zap className="w-4 h-4" />
+              تنفيذ {tradeType === 'buy' ? 'الشراء' : 'البيع'}
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 }
