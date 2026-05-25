@@ -6,6 +6,7 @@ import {
   Search, Bell, Moon, Sun, ChevronDown, Wallet,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import TradeTicker from './TradeTicker';
 
 const PAGE_TITLES = {
   '/': { title: 'لوحة التحكم', subtitle: 'مرحباً بعودتك' },
@@ -41,51 +42,8 @@ const Navbar = () => {
         {/* Mobile Logo (only on tiny screens where ticker might be hidden) */}
         <div className="xs:hidden font-bold text-base dark:text-white">تجار المال</div>
 
-        {/* Center: Trading Ticker (Advertisement) */}
-        <div className="flex flex-1 max-w-xl mx-2 md:mx-4 lg:mx-8 overflow-hidden bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-100 dark:border-slate-800 py-1.5 md:py-2 px-3 md:px-4 relative group">
-          <motion.div
-            className="flex items-center gap-8 whitespace-nowrap"
-            animate={{ x: ["-50%", "0%"] }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          >
-            {[1, 2].map((loop) => (
-              <div key={loop} className="flex items-center gap-8 shrink-0 pr-8">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-slate-400">ARAMCO</span>
-                  <span className="text-sm font-bold dark:text-white">32.45</span>
-                  <span className="text-[10px] font-bold text-emerald-500">▲ +0.12%</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-slate-400">SABIC</span>
-                  <span className="text-sm font-bold dark:text-white">91.20</span>
-                  <span className="text-[10px] font-bold text-rose-500">▼ -0.45%</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-slate-400">STC</span>
-                  <span className="text-sm font-bold dark:text-white">42.10</span>
-                  <span className="text-[10px] font-bold text-emerald-500">▲ +0.05%</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-slate-400">MAADEN</span>
-                  <span className="text-sm font-bold dark:text-white">54.30</span>
-                  <span className="text-[10px] font-bold text-emerald-500">▲ +1.20%</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-slate-400">SAR/USD</span>
-                  <span className="text-sm font-bold dark:text-white">3.75</span>
-                  <span className="text-[10px] font-bold text-slate-400">0.00%</span>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-          {/* Fades */}
-          <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-slate-50 dark:from-slate-800/40 to-transparent pointer-events-none" />
-          <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-slate-50 dark:from-slate-800/40 to-transparent pointer-events-none" />
-        </div>
+        {/* Center: Buy/Sell ticker (شريط البيع والشراء) */}
+        <TradeTicker />
 
         {/* Right: Actions */}
         <div className="flex items-center gap-2 md:gap-4 flex-none justify-end">

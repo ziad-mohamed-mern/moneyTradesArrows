@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { INITIAL_TRADE_TICKER, createTickerFromOrder } from '../data/tradeTickerData';
 
 export const useStore = create(
   persist(
@@ -40,6 +41,9 @@ export const useStore = create(
       setSelectedTimeframe: (tf) => set({ selectedTimeframe: tf }),
       tradeType: 'buy', // 'buy' | 'sell'
       setTradeType: (type) => set({ tradeType: type }),
+
+      // Live buy/sell ticker (navbar)
+      tradeTicker: INITIAL_TRADE_TICKER,
 
       // Orders history stored in state
       orders: [
@@ -95,12 +99,20 @@ export const useStore = create(
         },
       ],
       addOrder: (order) =>
-        set((state) => ({
-          orders: [
-            { ...order, id: state.orders.length + 1, date: new Date().toISOString().split('T')[0] },
-            ...state.orders,
-          ],
-        })),
+        set((state) => {
+          const newOrder = {
+            ...order,
+            id: state.orders.length + 1,
+            date: new Date().toISOString().split('T')[0],
+          };
+          const sellerName = state.user?.name || state.user?.fullName || 'المستثمر';
+          const tickerEntry = createTickerFromOrder(newOrder, sellerName);
+
+          return {
+            orders: [newOrder, ...state.orders],
+            tradeTicker: [tickerEntry, ...state.tradeTicker].slice(0, 20),
+          };
+        }),
     }),
     {
       name: 'investment-storage',
@@ -108,6 +120,7 @@ export const useStore = create(
         darkMode: state.darkMode,
         user: state.user,
         orders: state.orders,
+        tradeTicker: state.tradeTicker,
       }),
     }
   )

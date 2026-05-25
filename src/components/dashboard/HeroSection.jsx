@@ -51,10 +51,8 @@ const HeroSection = () => {
             <div className="glass p-6 rounded-[2rem] border-white/20">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white font-bold">ST</div>
                   <div>
-                    <p className="text-white font-bold">سابك</p>
-                    <p className="text-white/60 text-xs">2010.SR</p>
+                    <p className="text-white font-bold">سعر سهم تجار المال الان</p>
                   </div>
                 </div>
                 <div className="text-left">
