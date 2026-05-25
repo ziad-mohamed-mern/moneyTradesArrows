@@ -19,10 +19,10 @@ const HeroSection = () => {
         <div className="flex-1 text-center md:text-right">
 
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
-            مستقبلك المالي يبدأ <br /> مع تجار المال للاستثمار
+            مستقبلك المالي <br />يبدأ <br /> مع تجار المال <br /> للاستثمار
           </h2>
           <p className="text-primary-100 mb-8 max-w-xl mx-auto md:mx-0 text-lg">
-            منصة متكاملة لإدارة استثماراتك في السوق المالي السعودي بذكاء واحترافية. استثمر، داول، وحقق أرباحك بكل سهولة.
+            منصة متكاملة لإدارة استثماراتك معانا.
           </p>
 
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
