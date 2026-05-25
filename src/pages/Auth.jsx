@@ -57,10 +57,10 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex bg-primary-50 bg-mesh transition-colors duration-300">
 
-      {/* Brand panel — login & register share this side */}
-      <div className="hidden lg:flex flex-1 relative overflow-hidden bg-primary-500 rounded-l-[3rem]">
-        <div className="absolute inset-0 bg-auth-mesh opacity-80" />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary-500/40 via-transparent to-primary-900/70" />
+      {/* Brand panel — right side (RTL) */}
+      <div className="hidden lg:flex flex-1 relative overflow-hidden bg-black rounded-l-[3rem]">
+        <div className="absolute inset-0 bg-auth-mesh opacity-60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80" />
 
         <div className="relative z-10 flex flex-col justify-between items-center p-12 xl:p-16 w-full text-center">
           <motion.img
