@@ -5,6 +5,24 @@ import { Mail, Lock, User, ArrowRight, ShieldCheck, Phone, Loader2 } from 'lucid
 
 const LOGO_SRC = '/logo.png';
 
+const PARTNERS = [
+  {
+    name: 'هيئة السوق المالية',
+    href: 'https://cma.org.sa',
+    logo: '/partners/cma.png',
+  },
+  {
+    name: 'وزارة الاستثمار',
+    href: 'https://misa.gov.sa',
+    logo: '/partners/misa.png',
+  },
+  {
+    name: 'البنك المركزي السعودي',
+    href: 'https://www.sama.gov.sa',
+    logo: '/partners/sama.png',
+  },
+];
+
 const Auth = () => {
   const { login, register, isLoading } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
@@ -62,17 +80,17 @@ const Auth = () => {
         <div className="absolute inset-0 bg-auth-mesh opacity-60" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80" />
 
-        <div className="relative z-10 flex flex-col justify-between items-center p-12 xl:p-16 w-full text-center">
+        <div className="relative z-10 flex flex-col justify-between items-center p-8 xl:p-12 w-full text-center min-h-0 flex-1">
           <motion.img
             src={LOGO_SRC}
             alt="تجار المال"
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="w-44 xl:w-52 h-auto object-contain drop-shadow-glow-gold"
+            className="w-36 xl:w-44 h-auto object-contain drop-shadow-glow-gold flex-shrink-0"
           />
 
-          <div className="max-w-xl px-2">
+          <div className="max-w-xl px-2 py-6 overflow-y-auto flex-1 min-h-0">
             <h2 className="font-serif text-3xl xl:text-4xl font-bold text-gold-300 mb-5 leading-tight">
               استثمر بذكاء، <br /> ونمِّ ثروتك بأمان.
             </h2>
@@ -83,6 +101,28 @@ const Auth = () => {
               <p>
                 كما تمنح المساهمين رؤية شاملة ودقيقة حول أرباح الشركات ومشاريعها وخططها المستقبلية، عبر منظومة رقمية متطورة تُمكّن المستثمر من الاطلاع على القيمة الحقيقية لاستثماراته واتخاذ قراراته بثقة واطمئنان، حسب الأنظمة بالمملكة العربية السعودية.
               </p>
+            </div>
+
+            <div className="mt-8 pt-6 border-t border-gold-400/25">
+              <p className="text-gold-300 text-sm font-semibold mb-4">شركاء المشروع</p>
+              <div className="flex flex-wrap items-stretch justify-center gap-3">
+                {PARTNERS.map((partner) => (
+                  <a
+                    key={partner.href}
+                    href={partner.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={partner.name}
+                    className="flex items-center justify-center bg-white rounded-xl px-4 py-3 h-[4.5rem] min-w-[6.5rem] max-w-[8.5rem] flex-1 hover:ring-2 hover:ring-gold-400/50 hover:shadow-lg transition-all duration-200"
+                  >
+                    <img
+                      src={partner.logo}
+                      alt={partner.name}
+                      className="max-h-11 w-full object-contain"
+                    />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 
